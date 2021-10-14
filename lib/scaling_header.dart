@@ -6,91 +6,91 @@ import 'package:flutter/material.dart';
 
 class ScalingHeader extends StatefulWidget {
   ScalingHeader(
-      {Key key,
-      this.leading,
-      this.automaticallyImplyLeading = true,
-      this.title,
-      this.actions,
-      this.bottom,
-      this.elevation = 0,
-      this.backgroundColor,
-      this.brightness,
-      this.iconTheme,
-      this.textTheme,
-      this.primary = true,
-      this.centerTitle,
-      this.titleSpacing = NavigationToolbar.kMiddleSpacing,
-      this.bottomOpacity = 1.0,
-      this.flexibleSpace,
-      this.flexibleSpaceHeight = 275,
-      this.overlapContentHeight = 50,
-      this.overlapContentWidth = 300,
-      @required this.overlapContent,
-      @required this.overlapContentBackgroundColor,
-      this.overlapContentRadius = 30});
+      {Key? key,
+        this.leading,
+        this.automaticallyImplyLeading = true,
+        this.title,
+        this.actions,
+        this.bottom,
+        this.elevation = 0,
+        this.backgroundColor,
+        this.brightness,
+        this.iconTheme,
+        this.textTheme,
+        this.primary = true,
+        this.centerTitle,
+        this.titleSpacing = NavigationToolbar.kMiddleSpacing,
+        this.bottomOpacity = 1.0,
+        this.flexibleSpace,
+        this.flexibleSpaceHeight = 275,
+        this.overlapContentHeight = 50,
+        this.overlapContentWidth = 300,
+        @required this.overlapContent,
+        @required this.overlapContentBackgroundColor,
+        this.overlapContentRadius = 30});
 
   /// See [AppBar.leading]
-  final Widget leading;
+  final Widget? leading;
 
   /// See [AppBar.automaticallyImplyLeading]
-  final bool automaticallyImplyLeading;
+  final bool? automaticallyImplyLeading;
 
   /// See [AppBar.title]
-  final Widget title;
+  final Widget? title;
 
   /// See [AppBar.actions]
-  final List<Widget> actions;
+  final List<Widget>? actions;
 
   /// See [AppBar.bottom]
-  final PreferredSizeWidget bottom;
+  final PreferredSizeWidget? bottom;
 
   /// See [AppBar.elevation]
-  final double elevation;
+  final double? elevation;
 
   /// See [AppBar.backgroundColor]
-  final Color backgroundColor;
+  final Color? backgroundColor;
 
   /// See [AppBar.brightness]
-  final Brightness brightness;
+  final Brightness? brightness;
 
   /// See [AppBar.iconTheme]
-  final IconThemeData iconTheme;
+  final IconThemeData? iconTheme;
 
   /// See [AppBar.textTheme]
-  final TextTheme textTheme;
+  final TextTheme? textTheme;
 
   /// See [AppBar.primary]
-  final bool primary;
+  final bool? primary;
 
   /// See [AppBar.centerTitle]
-  final bool centerTitle;
+  final bool? centerTitle;
 
   /// See [AppBar.titleSpacing]
-  final double titleSpacing;
+  final double? titleSpacing;
 
   /// See [AppBar.bottomOpacity]
-  final double bottomOpacity;
+  final double? bottomOpacity;
 
   /// Expanded widget, usually an Image
-  final Widget flexibleSpace;
+  final Widget? flexibleSpace;
 
   /// Max height of [flexibleSpace]
-  final double flexibleSpaceHeight;
+  final double? flexibleSpaceHeight;
 
   /// The height of [overlapContent]
-  final double overlapContentHeight;
+  final double? overlapContentHeight;
 
   /// The width of [overlapContent]
-  final double overlapContentWidth;
+  final double? overlapContentWidth;
 
   ///The content widget that is centered onto bottom of [flexibleSpace]
-  final Widget overlapContent;
+  final Widget? overlapContent;
 
   ///The background color of [overlapContent]
-  final Color overlapContentBackgroundColor;
+  final Color? overlapContentBackgroundColor;
 
   ///The radius of [overlapContent]
-  final double overlapContentRadius;
+  final double? overlapContentRadius;
 
   @override
   _ScalingHeaderState createState() => _ScalingHeaderState();
@@ -99,18 +99,18 @@ class ScalingHeader extends StatefulWidget {
 class _ScalingHeaderState extends State<ScalingHeader>
     with SingleTickerProviderStateMixin {
   ValueNotifier<double> _shrinkOffsetNotifier = ValueNotifier<double>(0);
-  AnimationController _animationController;
+  late AnimationController _animationController;
   bool _isExpanded = true;
-  double expandedHeight;
-  double overlapContentHeight;
-  double overlapContentWidth;
+  late double expandedHeight;
+  late double overlapContentHeight;
+  late double overlapContentWidth;
 
   @override
   void initState() {
     expandedHeight =
-        widget.flexibleSpaceHeight + widget.overlapContentHeight / 2;
-    overlapContentHeight = widget.overlapContentHeight;
-    overlapContentWidth = widget.overlapContentWidth;
+        (widget.flexibleSpaceHeight??0) + (widget.overlapContentHeight??0) / 2;
+    overlapContentHeight = widget.overlapContentHeight??0;
+    overlapContentWidth = widget.overlapContentWidth??0;
 
     _shrinkOffsetNotifier.addListener(() {
       final offset =
@@ -136,23 +136,23 @@ class _ScalingHeaderState extends State<ScalingHeader>
   Widget build(BuildContext context) {
     var appBar = AppBar(
       leading: widget.leading,
-      automaticallyImplyLeading: widget.automaticallyImplyLeading,
+      automaticallyImplyLeading: widget.automaticallyImplyLeading??true,
       title: widget.title,
-      actions: widget.actions,
+      actions: widget.actions??[],
       bottom: widget.bottom,
       elevation: widget.elevation,
       backgroundColor: widget.backgroundColor != null
-          ? widget.backgroundColor.withOpacity(_animationController.value)
+          ? widget.backgroundColor?.withOpacity(_animationController.value)
           : Theme.of(context)
-              .primaryColor
-              .withOpacity(_animationController.value),
+          .primaryColor
+          .withOpacity(_animationController.value),
       brightness: widget.brightness,
       iconTheme: widget.iconTheme,
       textTheme: widget.textTheme,
-      primary: widget.primary,
+      primary: widget.primary??true,
       centerTitle: widget.centerTitle,
       titleSpacing: widget.titleSpacing,
-      bottomOpacity: widget.bottomOpacity,
+      bottomOpacity: widget.bottomOpacity??1.0,
     );
 
     return SliverPersistentHeader(
@@ -162,10 +162,10 @@ class _ScalingHeaderState extends State<ScalingHeader>
           overlapContentWidth,
           _shrinkOffsetNotifier,
           appBar,
-          widget.flexibleSpace,
-          widget.overlapContent,
-          widget.overlapContentBackgroundColor,
-          widget.overlapContentRadius,
+          widget.flexibleSpace??SizedBox.shrink(),
+          widget.overlapContent??SizedBox.shrink(),
+          widget.overlapContentBackgroundColor??Theme.of(context).shadowColor,
+          widget.overlapContentRadius??1.0,
           MediaQuery.of(context).padding.top),
       pinned: true,
     );
